@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arterita — Catálogo de Produtos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --rosa:       #f28b8b;
+      --rosa-claro: #fce8e8;
+      --rosa-medio: #e8b4b8;
+      --creme:      #fdf8f4;
+      --creme-card: #fffaf8;
+      --azul-bebe:  #aacfe0;
+      --azul-suave: #d6eaf5;
+      --verde-sage: #a8c5a0;
+      --verde-suave:#e8f2e6;
+      --marrom:     #5c3d2e;
+      --marrom-med: #8b6355;
+      --cinza:      #9e8e88;
+      --branco:     #ffffff;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Nunito',sans-serif; background:var(--creme); color:var(--marrom); }
+
+    header {
+      background: linear-gradient(160deg, #fff5f5 0%, #fce8e8 50%, #fdf0e8 100%);
+      padding: 2rem 1.2rem 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--rosa-medio);
+      position: relative;
+    }
+    header::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+      background: linear-gradient(90deg, var(--azul-bebe), var(--rosa), var(--verde-sage));
+    }
+    .logo-wrap { margin-bottom:0.8rem; }
+    .logo-wrap img {
+      width:110px; height:110px; object-fit:contain; border-radius:50%;
+      box-shadow: 0 4px 20px rgba(242,139,139,0.25);
+    }
+    .header-tag {
+      font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase;
+      color:var(--rosa); font-weight:700; margin-bottom:0.3rem;
+    }
+    header h1 {
+      font-family:'Playfair Display',serif; font-size:2rem; font-weight:400;
+      color:var(--marrom); line-height:1.15;
+    }
+    header h1 em { font-style:italic; color:var(--rosa); }
+    .header-city {
+      margin-top:0.4rem; font-size:0.78rem; color:var(--marrom-med);
+      font-weight:400; letter-spacing:0.04em;
+    }
+    .header-city span { color:var(--rosa); }
+
+    .filtros {
+      display:flex; gap:0.45rem; overflow-x:auto; padding:1rem 1.2rem;
+      scrollbar-width:none; background:var(--branco);
+      border-bottom:1px solid #f0e8e4; position:sticky; top:0; z-index:20;
+    }
+    .filtros::-webkit-scrollbar { display:none; }
+    .filtro-btn {
+      flex-shrink:0; padding:0.42rem 1rem; border-radius:999px;
+      border:1.5px solid #e8d8d4; background:transparent;
+      font-family:'Nunito',sans-serif; font-size:0.74rem; font-weight:600;
+      color:var(--cinza); cursor:pointer; transition:all 0.2s; white-space:nowrap;
+    }
+    .filtro-btn.ativo, .filtro-btn:hover {
+      background:var(--rosa); border-color:var(--rosa); color:#fff;
+    }
+    .filtro-btn.azul.ativo, .filtro-btn.azul:hover {
+      background:var(--azul-bebe); border-color:var(--azul-bebe); color:var(--marrom);
+    }
+    .filtro-btn.verde.ativo, .filtro-btn.verde:hover {
+      background:var(--verde-sage); border-color:var(--verde-sage); color:var(--marrom);
+    }
+
+    .secao { padding:1.6rem 1.2rem 0.4rem; }
+    .secao-header { display:flex; align-items:center; gap:0.7rem; margin-bottom:1rem; }
+    .secao-icone {
+      width:34px; height:34px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;
+    }
+    .icone-rosa { background:var(--rosa-claro); }
+    .icone-azul { background:var(--azul-suave); }
+    .icone-verde { background:var(--verde-suave); }
+    .secao-titulo {
+      font-family:'Playfair Display',serif; font-size:1.25rem;
+      font-weight:500; color:var(--marrom);
+    }
+
+    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0.9rem; }
+
+    .card {
+      background:var(--creme-card); border-radius:14px; overflow:hidden;
+      border:1px solid #f0e4e0; box-shadow:0 2px 8px rgba(92,61,46,0.06);
+      cursor:pointer; transition:transform 0.18s; position:relative;
+      animation: fadeUp 0.35s ease both;
+    }
+    .card:active { transform:scale(0.97); }
+    .card-thumb {
+      width:100%; aspect-ratio:1/1;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:0.3rem;
+    }
+    .card-thumb-lbl {
+      font-size:0.6rem; letter-spacing:0.06em; text-transform:uppercase;
+      font-weight:700; opacity:0.7;
+    }
+    .card-body { padding:0.7rem 0.8rem 0.85rem; }
+    .card-nome {
+      font-family:'Playfair Display',serif; font-size:0.92rem; font-weight:500;
+      line-height:1.25; color:var(--marrom); margin-bottom:0.25rem;
+    }
+    .card-info { font-size:0.7rem; color:var(--cinza); line-height:1.4; margin-bottom:0.55rem; }
+    .card-rodape { display:flex; align-items:center; justify-content:space-between; }
+    .card-preco { font-size:0.82rem; font-weight:700; color:var(--rosa); }
+    .btn-ver {
+      background:var(--marrom); color:#fff; border:none; border-radius:999px;
+      padding:0.32rem 0.75rem; font-family:'Nunito',sans-serif; font-size:0.68rem;
+      font-weight:700; cursor:pointer; transition:background 0.2s;
+    }
+    .btn-ver:hover { background:var(--rosa); }
+
+    .card-wide {
+      grid-column:1/-1; display:flex; flex-direction:row; align-items:stretch;
+    }
+    .card-wide .card-thumb {
+      width:38%; aspect-ratio:unset; min-height:110px; flex-shrink:0;
+    }
+    .card-wide .card-body { flex:1; display:flex; flex-direction:column; justify-content:center; }
+    .card-wide .card-nome { font-size:1.1rem; }
+
+    .sep {
+      height:1px; margin:1.5rem 1.2rem;
+      background:linear-gradient(90deg, transparent, #e8d8d4, transparent);
+    }
+
+    footer {
+      background:var(--marrom); padding:2.5rem 1.5rem;
+      text-align:center; margin-top:2rem;
+    }
+    footer h2 {
+      font-family:'Playfair Display',serif; font-size:1.5rem;
+      font-weight:400; color:#fff; margin-bottom:0.3rem;
+    }
+    footer p { font-size:0.8rem; color:#c8b5ae; line-height:1.7; margin-bottom:1.5rem; }
+    .footer-btns { display:flex; flex-direction:column; gap:0.7rem; }
+    .footer-btns a {
+      display:flex; align-items:center; justify-content:center; gap:0.6rem;
+      background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+      border-radius:12px; padding:0.9rem 1.2rem; color:#fff;
+      text-decoration:none; font-size:0.82rem; font-weight:600; transition:background 0.2s;
+    }
+    .footer-btns a:hover { background:var(--rosa); border-color:var(--rosa); }
+    .footer-btns svg { width:18px; height:18px; flex-shrink:0; }
+    .footer-copy { margin-top:2rem; font-size:0.68rem; color:#7a6560; }
+
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(92,61,46,0.6); backdrop-filter:blur(5px);
+      z-index:100; display:flex; align-items:flex-end;
+      opacity:0; pointer-events:none; transition:opacity 0.25s;
+    }
+    .modal-overlay.aberto { opacity:1; pointer-events:all; }
+    .modal {
+      background:var(--creme-card); border-radius:22px 22px 0 0; width:100%;
+      max-height:88vh; overflow-y:auto;
+      transform:translateY(100%); transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);
+    }
+    .modal-overlay.aberto .modal { transform:translateY(0); }
+    .modal-handle {
+      width:38px; height:4px; border-radius:2px;
+      background:#e8d8d4; margin:0.9rem auto 0;
+    }
+    .modal-thumb {
+      width:100%; aspect-ratio:4/3;
+      display:flex; align-items:center; justify-content:center; font-size:5rem;
+    }
+    .modal-body { padding:1.5rem; }
+    .modal-cat {
+      font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--rosa); font-weight:700; margin-bottom:0.3rem;
+    }
+    .modal-nome {
+      font-family:'Playfair Display',serif; font-size:1.7rem;
+      font-weight:500; color:var(--marrom); margin-bottom:0.6rem;
+    }
+    .modal-desc {
+      font-size:0.86rem; line-height:1.75; color:var(--marrom-med); margin-bottom:1.2rem;
+    }
+    .modal-detalhes {
+      background:var(--creme); border-radius:12px; padding:1rem; margin-bottom:1.5rem;
+    }
+    .modal-det-row {
+      display:flex; justify-content:space-between;
+      font-size:0.78rem; padding:0.35rem 0; border-bottom:1px solid #f0e4e0;
+    }
+    .modal-det-row:last-child { border-bottom:none; }
+    .modal-det-row span:first-child { color:var(--cinza); }
+    .modal-det-row span:last-child { font-weight:700; color:var(--marrom); }
+    .btn-wpp {
+      display:flex; align-items:center; justify-content:center; gap:0.6rem;
+      width:100%; background:#25D366; color:#fff; border:none; border-radius:14px;
+      padding:1rem; font-family:'Nunito',sans-serif; font-size:0.95rem; font-weight:700;
+      cursor:pointer; text-decoration:none; transition:background 0.2s; margin-bottom:0.7rem;
+    }
+    .btn-wpp:hover { background:#1db954; }
+    .btn-fechar {
+      display:block; width:100%; text-align:center; padding:0.6rem;
+      font-size:0.82rem; color:var(--cinza); background:transparent; border:none; cursor:pointer;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .grid .card:nth-child(1){animation-delay:.04s}
+    .grid .card:nth-child(2){animation-delay:.09s}
+    .grid .card:nth-child(3){animation-delay:.14s}
+    .grid .card:nth-child(4){animation-delay:.19s}
+    .grid .card:nth-child(5){animation-delay:.24s}
+    .grid .card:nth-child(6){animation-delay:.29s}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <img src="data:image/jpeg;base64,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" alt="Arterita" />
+  </div>
+  <p class="header-tag">Catálogo de Produtos</p>
+  <h1><em>Arterita</em></h1>
+  <p class="header-city">Porto Alegre, RS <span>✦</span> Feito com amor e dedicação</p>
+</header>
+
+<nav class="filtros">
+  <button class="filtro-btn ativo" data-cat="todos">Todos</button>
+  <button class="filtro-btn" data-cat="bebe">🍼 Bebê</button>
+  <button class="filtro-btn azul" data-cat="escolar">🎒 Escolar</button>
+  <button class="filtro-btn" data-cat="vestuario">👗 Vestuário</button>
+  <button class="filtro-btn verde" data-cat="tipico">🎭 Típicos</button>
+  <button class="filtro-btn" data-cat="encomenda">✨ Encomenda</button>
+</nav>
+
+<main id="catalogo"></main>
+
+<footer>
+  <h2>Fale com a Arterita</h2>
+  <p>Produtos sob medida, personalizados<br/>e feitos com muito carinho para você.</p>
+  <div class="footer-btns">
+    <a href="https://wa.me/5500000000000" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp — (00) 00000-0000
+    </a>
+    <a href="https://instagram.com/arterita" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      @arterita
+    </a>
+  </div>
+  <p class="footer-copy">© 2025 Arterita — Porto Alegre, RS. Todos os direitos reservados.</p>
+</footer>
+
+<div class="modal-overlay" id="modal-overlay" onclick="fecharModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-thumb" id="modal-thumb"></div>
+    <div class="modal-body">
+      <p class="modal-cat" id="modal-cat"></p>
+      <h2 class="modal-nome" id="modal-nome"></h2>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="modal-detalhes" id="modal-detalhes"></div>
+      <a class="btn-wpp" id="modal-wpp" href="#" target="_blank">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Tenho interesse nesse produto
+      </a>
+      <button class="btn-fechar" onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WPP = "5500000000000";
+
+const secoes = [
+  {
+    id:"bebe", titulo:"Produtos para Bebê", icone:"🍼", iconeClass:"icone-rosa",
+    cor:"#fce8e8", textoCor:"#c4706a",
+    produtos:[
+      {id:1,nome:"Almofada para Amamentação",emoji:"🛏️",
+       desc:"Espuma D28 com revestimento impermeável. Consulte estampas disponíveis.",
+       detalhes:{"Tamanho":"60×50×10 cm","Material":"Espuma D28 + revestimento impermeável","Estampas":"A consultar","Prazo":"A combinar"}},
+      {id:2,nome:"Saquinho Roupa Suja/Limpa",emoji:"👜",
+       desc:"Saquinho prático para separar roupas sujas das limpas na bolsa da mamãe.",
+       detalhes:{"Uso":"Roupa suja e limpa","Prazo":"A combinar"}},
+      {id:3,nome:"Necessaire Porta-fraldas",emoji:"🧷",
+       desc:"Necessaire espaçosa e funcional para guardar fraldas com praticidade.",
+       detalhes:{"Categoria":"Bebê","Prazo":"A combinar"}},
+      {id:4,nome:"Necessaire Lenço Umedecido",emoji:"🧴",
+       desc:"Necessaire especial para acomodar a embalagem de lenços umedecidos.",
+       detalhes:{"Categoria":"Bebê","Prazo":"A combinar"}},
+      {id:5,nome:"Lençol e Fronhas",emoji:"🌙",
+       desc:"Malha de algodão macia. Disponível para berço americano e solteiro. Outros tamanhos sob consulta.",
+       detalhes:{"Material":"Malha de algodão","Tamanhos":"Berço americano, solteiro","Outros":"Consulte disponibilidade","Prazo":"A combinar"}},
+      {id:6,nome:"Macacão / Pijama Infantil",emoji:"👶",
+       desc:"Macacão e pijama infantil confeccionados com muito carinho.",
+       detalhes:{"Categoria":"Vestuário Bebê","Prazo":"A combinar"}},
+      {id:7,nome:"Avental Introdução Alimentar",emoji:"🥣",
+       desc:"Avental de plástico prático para a fase da introdução alimentar. Fácil de limpar.",
+       detalhes:{"Material":"Plástico","Uso":"Introdução alimentar","Prazo":"A combinar"}},
+      {id:8,nome:"Saco para Dormir",emoji:"😴",
+       desc:"Saco de dormir confortável para bebês, mantendo o calor sem soltar cobertores.",
+       detalhes:{"Categoria":"Bebê","Prazo":"A combinar"}},
+      {id:9,nome:"Babador Bandana",emoji:"🤱",
+       desc:"Babador estilo bandana, elegante e funcional. Diversas estampas disponíveis.",
+       detalhes:{"Estilo":"Bandana","Categoria":"Bebê","Prazo":"A combinar"}},
+      {id:10,nome:"Babador Atoalhado",emoji:"💧",
+       desc:"Babador em tecido atoalhado, altamente absorvente e macio.",
+       detalhes:{"Material":"Tecido atoalhado","Prazo":"A combinar"}},
+    ]
+  },
+  {
+    id:"escolar", titulo:"Produtos Escolares", icone:"🎒", iconeClass:"icone-azul",
+    cor:"#d6eaf5", textoCor:"#5a8fa8",
+    produtos:[
+      {id:11,nome:"Saquinho Roupa Suja/Limpa",emoji:"🎒",
+       desc:"Saquinho para escola: separe roupa de educação física das limpas.",
+       detalhes:{"Uso":"Escolar","Prazo":"A combinar"}},
+      {id:12,nome:"Necessaire Escova de Dentes",emoji:"🦷",
+       desc:"Necessaire para guardar escova de dentes e creme dental na escola.",
+       detalhes:{"Conteúdo":"Escova + creme dental","Prazo":"A combinar"}},
+      {id:13,nome:"Farmacinha",emoji:"💊",
+       desc:"Necessaire farmacinha para guardar medicamentos e itens de primeiros socorros.",
+       detalhes:{"Uso":"Farmacinha escolar","Prazo":"A combinar"}},
+      {id:14,nome:"Tapetinho para Lanche",emoji:"🍎",
+       desc:"Tapetinho impermeável e fácil de limpar para a hora do lanche.",
+       detalhes:{"Uso":"Lanche escolar","Prazo":"A combinar"}},
+      {id:15,nome:"Avental Escolar",emoji:"🎨",
+       desc:"Avental para atividades de pintura e artes na escola.",
+       detalhes:{"Uso":"Pintura e atividades","Prazo":"A combinar"}},
+    ]
+  },
+  {
+    id:"vestuario", titulo:"Vestuário Infantil", icone:"👗", iconeClass:"icone-rosa",
+    cor:"#fce8e8", textoCor:"#c4706a",
+    produtos:[
+      {id:16,nome:"Colete em Microsoft",emoji:"🧥",
+       desc:"Colete infantil quentinho em tecido Microsoft. Disponível em rosa, azul, azul escuro e branco.",
+       detalhes:{"Material":"Microsoft","Cores":"Rosa, Azul, Azul escuro, Branco","Tamanhos":"Infantil","Prazo":"A combinar"}},
+      {id:17,nome:"Calça em Microsoft",emoji:"👖",
+       desc:"Calça infantil macia e confortável em tecido Microsoft.",
+       detalhes:{"Material":"Microsoft","Prazo":"A combinar"}},
+      {id:18,nome:"Vestido Infantil",emoji:"👗",
+       desc:"Vestidos infantis com acabamento especial e muito charme.",
+       detalhes:{"Categoria":"Vestuário infantil","Prazo":"A combinar"}},
+      {id:19,nome:"Canguru em Microsoft",emoji:"🦘",
+       desc:"Canguru quentinho em Microsoft para os dias frios.",
+       detalhes:{"Material":"Microsoft","Prazo":"A combinar"}},
+      {id:20,nome:"Blusão em Microsoft",emoji:"🧤",
+       desc:"Blusão infantil confortável em Microsoft, ideal para o outono/inverno.",
+       detalhes:{"Material":"Microsoft","Prazo":"A combinar"}},
+      {id:21,nome:"Roupas em Soft",emoji:"🌟",
+       desc:"Diversos itens em tecido Soft: quentinho, macio e super confortável.",
+       detalhes:{"Material":"Soft","Itens":"Diversos","Prazo":"A combinar"}},
+    ]
+  },
+  {
+    id:"tipico", titulo:"Trajes Típicos", icone:"🎭", iconeClass:"icone-verde",
+    cor:"#e8f2e6", textoCor:"#5a8a52",
+    produtos:[
+      {id:22,nome:"Vestido de Prenda",emoji:"💃",
+       desc:"Vestido de prenda gaúcha confeccionado com cuidado e tradição.",
+       detalhes:{"Estilo":"Gaúcho — Prenda","Prazo":"A combinar"}},
+      {id:23,nome:"Bombacha e Colete Gaúcho",emoji:"🤠",
+       desc:"Conjunto de bombacha e colete gaúcho com acabamento tradicional.",
+       detalhes:{"Estilo":"Gaúcho","Prazo":"A combinar"}},
+      {id:24,nome:"Avental Caipira",emoji:"🌽",
+       desc:"Avental caipira perfeito para festas juninas e eventos escolares.",
+       detalhes:{"Estilo":"Caipira / Junino","Prazo":"A combinar"}},
+      {id:25,nome:"Colete Caipira",emoji:"🎪",
+       desc:"Colete caipira colorido e alegre para arrasar nas festas juninas.",
+       detalhes:{"Estilo":"Caipira / Junino","Prazo":"A combinar"}},
+    ]
+  }
+];
+
+function renderizar(filtro="todos"){
+  const cat=document.getElementById("catalogo");
+  cat.innerHTML="";
+  let first=true;
+  secoes.forEach(sec=>{
+    if(filtro!=="todos"&&filtro!==sec.id)return;
+    if(!first){const s=document.createElement("div");s.className="sep";cat.appendChild(s);}
+    first=false;
+    const el=document.createElement("section");
+    el.className="secao";
+    el.innerHTML=`<div class="secao-header"><div class="secao-icone ${sec.iconeClass}">${sec.icone}</div><h2 class="secao-titulo">${sec.titulo}</h2></div><div class="grid" id="g-${sec.id}"></div>`;
+    cat.appendChild(el);
+    const grid=el.querySelector(`#g-${sec.id}`);
+    sec.produtos.forEach(p=>{
+      const c=document.createElement("div");
+      c.className="card";c.dataset.cat=sec.id;
+      c.onclick=()=>abrirModal(p,sec);
+      c.innerHTML=`<div class="card-thumb" style="background:linear-gradient(135deg,${sec.cor},${sec.cor}99)"><span style="font-size:2.3rem">${p.emoji}</span><span class="card-thumb-lbl" style="color:${sec.textoCor}">ver detalhes</span></div><div class="card-body"><h3 class="card-nome">${p.nome}</h3><p class="card-info">${p.desc.substring(0,65)}${p.desc.length>65?"…":""}</p><div class="card-rodape"><span class="card-preco">A consultar</span><button class="btn-ver">Ver</button></div></div>`;
+      grid.appendChild(c);
+    });
+  });
+  if(filtro==="todos"||filtro==="encomenda"){
+    if(!first){const s=document.createElement("div");s.className="sep";cat.appendChild(s);}
+    const el=document.createElement("section");
+    el.className="secao";
+    el.innerHTML=`<div class="secao-header"><div class="secao-icone icone-rosa">✨</div><h2 class="secao-titulo">Sob Encomenda</h2></div><div class="grid"><div class="card card-wide" onclick="abrirEncomenda()"><div class="card-thumb" style="background:linear-gradient(135deg,#fce8e8,#fdf0f0);width:38%;aspect-ratio:unset;min-height:110px;flex-shrink:0"><span style="font-size:3rem">🧵</span></div><div class="card-body"><h3 class="card-nome">Peça Personalizada</h3><p class="card-info">Criação exclusiva com tamanho, cor, estampa e detalhes do seu jeito.</p><div class="card-rodape"><span class="card-preco">A consultar</span><button class="btn-ver">Pedir</button></div></div></div></div>`;
+    cat.appendChild(el);
+  }
+}
+
+function abrirModal(p,sec){
+  document.getElementById("modal-cat").textContent=sec.titulo;
+  document.getElementById("modal-nome").textContent=p.nome;
+  document.getElementById("modal-desc").textContent=p.desc;
+  document.getElementById("modal-thumb").innerHTML=`<span style="font-size:5rem;background:linear-gradient(135deg,${sec.cor},${sec.cor}99);width:100%;height:100%;display:flex;align-items:center;justify-content:center">${p.emoji}</span>`;
+  document.getElementById("modal-detalhes").innerHTML=Object.entries(p.detalhes).map(([k,v])=>`<div class="modal-det-row"><span>${k}</span><span>${v}</span></div>`).join("");
+  const msg=encodeURIComponent(`Olá! Vi o catálogo da Arterita e tenho interesse em: *${p.nome}*. Pode me passar mais informações?`);
+  document.getElementById("modal-wpp").href=`https://wa.me/${WPP}?text=${msg}`;
+  document.getElementById("modal-overlay").classList.add("aberto");
+  document.body.style.overflow="hidden";
+}
+
+function abrirEncomenda(){
+  document.getElementById("modal-cat").textContent="Sob Encomenda";
+  document.getElementById("modal-nome").textContent="Peça Personalizada";
+  document.getElementById("modal-desc").textContent="Criação exclusiva com tamanho, cor, estampa e detalhes do seu jeito. Entre em contato para um orçamento especial.";
+  document.getElementById("modal-thumb").innerHTML=`<span style="font-size:5rem;background:linear-gradient(135deg,#fce8e8,#fdf0f0);width:100%;height:100%;display:flex;align-items:center;justify-content:center">🧵</span>`;
+  document.getElementById("modal-detalhes").innerHTML=`<div class="modal-det-row"><span>Personalização</span><span>Total</span></div><div class="modal-det-row"><span>Prazo</span><span>A combinar</span></div><div class="modal-det-row"><span>Pagamento</span><span>A combinar</span></div>`;
+  const msg=encodeURIComponent("Olá! Gostaria de encomendar uma peça personalizada na Arterita. Pode me ajudar?");
+  document.getElementById("modal-wpp").href=`https://wa.me/${WPP}?text=${msg}`;
+  document.getElementById("modal-overlay").classList.add("aberto");
+  document.body.style.overflow="hidden";
+}
+
+function fecharModal(e){
+  if(e&&e.target!==document.getElementById("modal-overlay"))return;
+  document.getElementById("modal-overlay").classList.remove("aberto");
+  document.body.style.overflow="";
+}
+
+renderizar();
+</script>
+</body>
+</html>
